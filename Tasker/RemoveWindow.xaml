@@ -1,0 +1,35 @@
+﻿<Window x:Class="Tasker.RemoveWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Tasker"
+        mc:Ignorable="d"
+        Title="RemoveWindow" Height="450" Width="400">
+    <StackPanel>
+        <Label Margin="10, 10, 10, 0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            Remove a Task
+        </Label>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Remove by Title" Margin="10,0,10,0" FontSize="14" >
+
+            </Label>
+            <TextBox Grid.Row="1" Margin="20, 10, 20, 10" Padding="2" FontSize="12" x:Name="TextBoxTitle" TextChanged="TextBoxTitle_TextChanged">
+
+            </TextBox>
+            <ScrollViewer Grid.Row="2">
+                <StackPanel x:Name="ContainsTextStackPanel">
+
+                </StackPanel>
+            </ScrollViewer>
+
+            
+        </Grid>
+
+    </StackPanel>
+</Window>

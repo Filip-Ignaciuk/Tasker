@@ -77,19 +77,19 @@
             </ScrollViewer>
 
             <ScrollViewer Grid.Row="1" Grid.Column="1">
-                <StackPanel x:Name="Required">
+                <StackPanel x:Name="Required" HorizontalAlignment="Stretch">
 
                 </StackPanel>
             </ScrollViewer>
 
             <ScrollViewer Grid.Row="1" Grid.Column="2">
-                <StackPanel x:Name="Optional">
+                <StackPanel x:Name="Optional" HorizontalAlignment="Stretch">
 
                 </StackPanel>
             </ScrollViewer>
 
             <ScrollViewer Grid.Row="1" Grid.Column="3">
-                <StackPanel x:Name="Other">
+                <StackPanel x:Name="Other" HorizontalAlignment="Stretch">
                     
                 </StackPanel>
             </ScrollViewer>

@@ -50,13 +50,13 @@ namespace Tasker
         {
             AddWindow addWindow = new AddWindow();
             addWindow.Show();
-            Page page = new Page();
             
         }
 
         private void Remove(object sender, RoutedEventArgs e)
         {
-
+            RemoveWindow removeWindow = new RemoveWindow();
+            removeWindow.Show();
         }
 
         private void Settings(object sender, RoutedEventArgs e)
@@ -65,7 +65,7 @@ namespace Tasker
         }
     }
 
-    public enum Level { Urgent, Required, Optional, Other }
+    public enum Level { Urgent, Required, Optional, Other, RemovingList }
     public class Task
     {
         public string title;
@@ -165,7 +165,11 @@ namespace Tasker
                     grid.Children.Add(description);
                     _task.stackPanels[3].Children.Add(grid);
                     break;
-                    
+                case Level.RemovingList:
+                    grid.Children.Add(title);
+                    grid.Children.Add(description);
+                    _task.stackPanels[0].Children.Add(grid);
+                    break;
 
             }
 
