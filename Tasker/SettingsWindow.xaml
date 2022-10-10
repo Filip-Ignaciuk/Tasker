@@ -1,0 +1,54 @@
+﻿<Window x:Class="Tasker.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Tasker"
+        mc:Ignorable="d"
+        Title="SettingsWindow" Height="450" Width="600">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <Button Content="Appearance" Padding="0,10,0,10" Click="Appearance_Click">
+                
+            </Button>
+            <Button Content="Customise" Padding="0,10,0,10" Click="Customise_Click">
+
+            </Button>
+            <Button Content="Preference" Padding="0,10,0,10">
+
+            </Button>
+            <Button Content="About me" Padding="0,10,0,10">
+
+            </Button>
+
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <Label HorizontalAlignment="Center" Grid.Row="0">
+                <TextBlock FontSize="25" TextDecorations="Underline">Appearance</TextBlock>
+            </Label>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <CheckBox x:Name="Dark_Mode" Margin="20, 10,0,10" IsChecked="True" IsEnabledChanged="Dark_Mode_IsEnabledChanged">
+                    
+                </CheckBox>
+                <Label Grid.Column="1" Content="Dark Mode" VerticalAlignment="Center">
+
+                </Label>
+
+            </Grid>
+            
+            
+        </StackPanel>
+        
+        
+    </Grid>
+</Window>

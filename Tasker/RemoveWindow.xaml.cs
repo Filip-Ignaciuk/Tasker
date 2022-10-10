@@ -29,6 +29,7 @@ namespace Tasker
             if (TextBoxTitle.Text == "")
             {
                 ContainsTextStackPanel.Children.Clear();
+                
             }
 
 
@@ -43,46 +44,50 @@ namespace Tasker
 
                 foreach (var child in tempstackpanel.Children)
                 {
-                    if (child.GetType() == typeof(Grid))
+                    if (child.GetType() == typeof(Border))
                     {
-                        int i = 0;
-                        Grid grid = (Grid)child;
-                        string Title = string.Empty;
-                        string Description = string.Empty;
-                        
-                        // You have to completely delete the rooted child of the stackpanel, containing the spcific task, hence the creation of a new task.
-                        foreach (var gridChild in grid.Children)
+                        Border border = (Border)child;
+                        if (border.Child.GetType() == typeof(Grid))
                         {
-                            
+                            int i = 0;
+                            Grid grid = (Grid)border.Child;
+                            string Title = string.Empty;
+                            string Description = string.Empty;
 
-                            if (gridChild.GetType() == typeof(Label))
+                            // You have to completely delete the rooted child of the stackpanel, containing the spcific task, hence the creation of a new task to represent the task.
+                            foreach (var gridChild in grid.Children)
                             {
-                                Label label = (Label)gridChild;
-                                string labelContent = (string)label.Content;
-                                if (labelContent.Contains(TextBoxTitle.Text))
+
+
+                                if (gridChild.GetType() == typeof(Label))
                                 {
-                                    i++;
-                                    
-                                }
-                                if (i == 1)
-                                {
-                                    Title = labelContent;
+                                    Label label = (Label)gridChild;
+                                    string labelContent = (string)label.Content;
+                                    if (labelContent.Contains(TextBoxTitle.Text))
+                                    {
+                                        i++;
+
+                                    }
+                                    if (i == 1)
+                                    {
+                                        Title = labelContent;
+                                    }
+
+
+                                    if (i == 2 && Title != string.Empty) //  && ContainsTheTask(Title, Description, ContainsTextStackPanel)
+                                    {
+                                        Description = labelContent;
+                                        StackPanel[] stackpanels = new StackPanel[1];
+                                        stackpanels[0] = ContainsTextStackPanel;
+                                        Task task = new Task(Title, Level.RemovingList, Description, ref stackpanels);
+                                    }
                                 }
 
 
-                                if (i == 2 && Title != string.Empty) //  && ContainsTheTask(Title, Description, ContainsTextStackPanel)
-                                {
-                                    Description = labelContent;
-                                    StackPanel[] stackpanels = new StackPanel[1];
-                                    stackpanels[0] = ContainsTextStackPanel;
-                                    Task task = new Task(Title, Level.RemovingList, Description, ref stackpanels);
-                                }
+
+
                             }
-
-                            
-
-                            
-                        }    
+                        }
                     }
                 }
             }

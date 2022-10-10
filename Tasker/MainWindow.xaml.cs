@@ -36,6 +36,9 @@ namespace Tasker
             TaskerStore.CurrentStackpanels = stackPanelsLive;
 
 
+            TaskerStore.MainGrid = MainGrid;
+
+
         }
         
         
@@ -61,7 +64,8 @@ namespace Tasker
 
         private void Settings(object sender, RoutedEventArgs e)
         {
-
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.Show();
         }
     }
 
@@ -93,6 +97,12 @@ namespace Tasker
 
         public static void DisplayTask(Task _task)
         {
+            // Defining Border.
+            Border border = new Border();
+            border.BorderThickness = new Thickness(2);
+            border.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+            border.CornerRadius = new CornerRadius(2);
+             
             // Defining grid.
             Grid grid = new Grid();
             grid.HorizontalAlignment = HorizontalAlignment.Center;
@@ -133,7 +143,7 @@ namespace Tasker
             
             Grid.SetRow(description, 1);
             Grid.SetColumn(description, 0);
-
+            
 
             switch (_task.level)
             {
@@ -146,29 +156,34 @@ namespace Tasker
 
                     grid.Children.Add(title);
                     grid.Children.Add(description);
+                    border.Child = grid;
 
-                    _task.stackPanels[0].Children.Add(grid);
+                    _task.stackPanels[0].Children.Add(border);
                     break;
                 case Level.Required:
 
                     grid.Children.Add(title);
                     grid.Children.Add(description);
-                    _task.stackPanels[1].Children.Add(grid);
+                    border.Child = grid;
+                    _task.stackPanels[1].Children.Add(border);
                     break;
                 case Level.Optional:
                     grid.Children.Add(title);
                     grid.Children.Add(description);
-                    _task.stackPanels[2].Children.Add(grid);
+                    border.Child = grid;
+                    _task.stackPanels[2].Children.Add(border);
                     break;
                 case Level.Other:
                     grid.Children.Add(title);
                     grid.Children.Add(description);
-                    _task.stackPanels[3].Children.Add(grid);
+                    border.Child = grid;
+                    _task.stackPanels[3].Children.Add(border);
                     break;
                 case Level.RemovingList:
                     grid.Children.Add(title);
                     grid.Children.Add(description);
-                    _task.stackPanels[0].Children.Add(grid);
+                    border.Child = grid;
+                    _task.stackPanels[0].Children.Add(border);
                     break;
 
             }
