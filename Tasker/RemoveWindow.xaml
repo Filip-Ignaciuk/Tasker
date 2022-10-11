@@ -14,6 +14,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="4*"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Content="Remove by Title" Margin="10,0,10,0" FontSize="14" >
@@ -22,7 +23,34 @@
             <TextBox Grid.Row="1" Margin="20, 10, 20, 10" Padding="2" FontSize="12" x:Name="TextBoxTitle" TextChanged="TextBoxTitle_TextChanged">
 
             </TextBox>
-            <ScrollViewer Grid.Row="2">
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+
+                <CheckBox x:Name="CheckBox0"  Content="Urgent" Grid.Row="0" Grid.Column="0">
+                    
+                </CheckBox>
+                <CheckBox x:Name="CheckBox1"  Content="Required" Grid.Row="1" Grid.Column="0">
+
+                </CheckBox>
+                <CheckBox x:Name="CheckBox2"  Content="Optional" Grid.Row="0" Grid.Column="1">
+
+                </CheckBox>
+                <CheckBox x:Name="CheckBox3"  Content="Other" Grid.Row="2" Grid.Column="1">
+
+                </CheckBox>
+            </Grid>
+
+
+            <ScrollViewer Grid.Row="3">
                 <StackPanel x:Name="ContainsTextStackPanel">
 
                 </StackPanel>
