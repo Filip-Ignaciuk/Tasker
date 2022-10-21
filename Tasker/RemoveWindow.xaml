@@ -15,16 +15,13 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="4*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Content="Remove by Title" Margin="10,0,10,0" FontSize="14" >
 
             </Label>
-            <TextBox Grid.Row="1" Margin="20, 10, 20, 10" Padding="2" FontSize="12" x:Name="TextBoxTitle" TextChanged="TextBoxTitle_TextChanged">
-
-            </TextBox>
-
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -35,19 +32,24 @@
                 </Grid.RowDefinitions>
 
 
-                <CheckBox x:Name="CheckBox0"  Content="Urgent" Grid.Row="0" Grid.Column="0">
-                    
-                </CheckBox>
-                <CheckBox x:Name="CheckBox1"  Content="Required" Grid.Row="1" Grid.Column="0">
+                <CheckBox x:Name="CheckBox0"  Content="Urgent" Grid.Row="0" Grid.Column="0" IsChecked="True" Checked="CheckBox0_Checked" Unchecked="CheckBox0_Unchecked">
 
                 </CheckBox>
-                <CheckBox x:Name="CheckBox2"  Content="Optional" Grid.Row="0" Grid.Column="1">
+                <CheckBox x:Name="CheckBox1"  Content="Required" Grid.Row="1" Grid.Column="0" IsChecked="True" Checked="CheckBox1_Checked" Unchecked="CheckBox1_Unchecked">
 
                 </CheckBox>
-                <CheckBox x:Name="CheckBox3"  Content="Other" Grid.Row="2" Grid.Column="1">
+                <CheckBox x:Name="CheckBox2"  Content="Optional" Grid.Row="0" Grid.Column="1" IsChecked="True" Checked="CheckBox2_Checked" Unchecked="CheckBox2_Unchecked">
+
+                </CheckBox>
+                <CheckBox x:Name="CheckBox3"  Content="Other" Grid.Row="2" Grid.Column="1" IsChecked="True" Checked="CheckBox3_Checked" Unchecked="CheckBox3_Unchecked">
 
                 </CheckBox>
             </Grid>
+            <TextBox Grid.Row="2" Margin="20, 10, 20, 10" Padding="2" FontSize="12" x:Name="TextBoxInput" TextChanged="TextBoxTitle_TextChanged">
+
+            </TextBox>
+
+            
 
 
             <ScrollViewer Grid.Row="3">
@@ -55,6 +57,23 @@
 
                 </StackPanel>
             </ScrollViewer>
+
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Content="Delete All" Click="Delete_All_Click">
+
+                </Button>
+
+                <Button Grid.Column="1" Content="Delete Selected" Click="Delete_Selected_Click">
+
+                </Button>
+
+            </Grid>
 
             
         </Grid>

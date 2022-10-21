@@ -26,11 +26,26 @@ namespace Tasker
             set { _currentStackpanels = value; }
         }
 
-        private static Grid _mainGrid;
+        
+
+        private static Grid? _mainGrid;
         public static Grid MainGrid
         {
             get { return _mainGrid; }
             set { _mainGrid = value; }
+        }
+
+        private static int _id = 1;
+
+        public static int Id
+        {
+            get
+            {
+                int id = _id;
+                _id++;
+                return id;
+            }
+            
         }
     }
 }

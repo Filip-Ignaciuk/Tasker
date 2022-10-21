@@ -19,6 +19,12 @@ namespace Tasker
     /// </summary>
     public partial class RemoveWindow : Window
     {
+        public static List<Task> tasks = new List<Task>();
+
+        public bool isUrgent = true;
+        public bool isRequired = true;
+        public bool isOptional = true;
+        public bool isOther = true;
         public RemoveWindow()
         {
             InitializeComponent();
@@ -26,112 +32,188 @@ namespace Tasker
 
         private void TextBoxTitle_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (TextBoxTitle.Text == "")
-            {
-                ContainsTextStackPanel.Children.Clear();
-                
-            }
+            IsTasksValid(TextBoxInput.Text);
+            
 
 
             foreach (var stackpanel in TaskerStore.CurrentStackpanels)
             {
                 StackPanel tempstackpanel = stackpanel;
+                
                 if (tempstackpanel == null)
                 {
                     break;
                     
                 }
 
+                if (tempstackpanel.Name == "Urgent" && !isUrgent)
+                {
+                    break;
+                }
+                else if (tempstackpanel.Name == "Required" && !isRequired)
+                {
+                    break;
+                }
+                else if (tempstackpanel.Name == "Optional" && !isOptional)
+                {
+                    break;
+                }
+                else if (tempstackpanel.Name == "Other" && !isOther)
+                {
+                    break;
+                }
+
+
+
                 foreach (var child in tempstackpanel.Children)
                 {
+
                     if (child.GetType() == typeof(Border))
                     {
                         Border border = (Border)child;
-                        if (border.Child.GetType() == typeof(Grid))
+                        Task task = border.Tag as Task;
+                        if (TaskExistsInRemovealStackpanel(border.Name))
                         {
-                            int i = 0;
-                            Grid grid = (Grid)border.Child;
-                            string Title = string.Empty;
-                            string Description = string.Empty;
-
-                            // You have to completely delete the rooted child of the stackpanel, containing the spcific task, hence the creation of a new task to represent the task.
-                            foreach (var gridChild in grid.Children)
-                            {
-
-
-                                if (gridChild.GetType() == typeof(Label))
-                                {
-                                    Label label = (Label)gridChild;
-                                    string labelContent = (string)label.Content;
-                                    if (labelContent.Contains(TextBoxTitle.Text))
-                                    {
-                                        i++;
-
-                                    }
-                                    if (i == 1)
-                                    {
-                                        Title = labelContent;
-                                    }
-
-
-                                    if (i == 2 && Title != string.Empty) //  && ContainsTheTask(Title, Description, ContainsTextStackPanel)
-                                    {
-                                        Description = labelContent;
-                                        StackPanel[] stackpanels = new StackPanel[1];
-                                        stackpanels[0] = ContainsTextStackPanel;
-                                        Task task = new Task(Title, Level.RemovingList, Description, ref stackpanels);
-                                    }
-                                }
-
-
-
-
-                            }
+                            break;
                         }
+
+                        bool doesContain = false;
+                        string Title = string.Empty;
+                        string Description = string.Empty;
+
+                        Title = task.title;
+                        Description = task.description; 
+
+                        if (Title.Contains(TextBoxInput.Text))
+                        {
+                            doesContain = true;
+                        }
+
+                        if (Description.Contains(TextBoxInput.Text))
+                        {
+                            doesContain = true;
+                        }
+
+                        if (doesContain)
+                        {
+                            Task.DisplayTask(task);
+                            tasks.Add(task);
+                        }
+
                     }
                 }
             }
 
-            // Fix this 
-
-            static bool ContainsTheTask(string _title, string _description, StackPanel _stackpanel)
+            if (TextBoxInput.Text == "")
             {
-                
-                foreach(var child in _stackpanel.Children)
-                {
-                    if (child.GetType() == typeof(Grid))
-                    {
-                        Grid grid = (Grid)child;
-                        foreach (var gridChild in grid.Children)
-                        {
+                ContainsTextStackPanel.Children.Clear();
+                tasks.Clear();
 
 
-                            if (gridChild.GetType() == typeof(Label))
-                            {
-                                Label label = (Label)gridChild;
-                                if (_title == (string)label.Content)
-                                {
-                                    return true;
-                                }
-
-                                if (_description == (string)label.Content)
-                                {
-                                    return true;
-                                }
-                                
-                            }
-
-
-
-
-                        }
-                    }
-                }
-                return false;
             }
+
 
         }
 
-        
+        public static void IsTasksValid(string _text)
+        {
+            List<Task> temptasks = tasks.ToList();
+            if (!(tasks.Count == 0))
+            {
+                foreach (var task in temptasks)
+                {
+                    if (task.title.Contains(_text) == false && task.title.Contains(_text) == false)
+                    {
+                        tasks.Remove(task);
+                    }
+                }
+            }
+
+            
+        }
+
+        public static bool TaskExistsInRemovealStackpanel(string _id)
+        {
+            foreach(var task in tasks)
+            {
+                if (task.Id == _id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool TaskExistsInRemovealStackpanel(Task _task)
+        {
+            foreach (var task in tasks)
+            {
+                if (task.Id == _task.Id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void DeleteTasks(Task[] _tasks)
+        {
+            foreach(Task task in _tasks)
+            {
+                task.Delete();
+            }
+        }
+
+
+
+        private void CheckBox1_Checked(object sender, RoutedEventArgs e)
+        {
+            isUrgent = true;
+        }
+
+        private void CheckBox0_Checked(object sender, RoutedEventArgs e)
+        {
+            isRequired = true;
+        }
+
+        private void CheckBox2_Checked(object sender, RoutedEventArgs e)
+        {
+            isOptional = true;
+        }
+
+        private void CheckBox3_Checked(object sender, RoutedEventArgs e)
+        {
+            isOther = true;
+        }
+
+        private void CheckBox0_Unchecked(object sender, RoutedEventArgs e)
+        {
+            isUrgent = false;
+        }
+
+        private void CheckBox1_Unchecked(object sender, RoutedEventArgs e)
+        {
+            isRequired = false;
+        }
+
+        private void CheckBox2_Unchecked(object sender, RoutedEventArgs e)
+        {
+            isOptional = false;
+        }
+
+        private void CheckBox3_Unchecked(object sender, RoutedEventArgs e)
+        {
+            isOther = false;
+        }
+
+        private void Delete_All_Click(object sender, RoutedEventArgs e)
+        {
+            Task[] toBeDeletedTasks = tasks.ToArray();
+            DeleteTasks(toBeDeletedTasks);
+        }
+
+        private void Delete_Selected_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

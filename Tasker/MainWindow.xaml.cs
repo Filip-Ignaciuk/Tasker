@@ -72,10 +72,12 @@ namespace Tasker
     public enum Level { Urgent, Required, Optional, Other, RemovingList }
     public class Task
     {
-        public string title;
-        public Level level;
-        public string description;
-        public StackPanel[] stackPanels;
+        public string? title;
+        public Level? level;
+        public string? description;
+        public StackPanel[]? stackPanels;
+        public string? Id;
+        private Border? border;
 
 
         public Task(string _title, Level _level, string _description, ref StackPanel[] _stackpanels)
@@ -86,6 +88,30 @@ namespace Tasker
             title = _title;
             level = _level;
             description = _description;
+
+
+            // Assigning ID
+            if (level == Level.Urgent)
+            {
+                Id = "id" + 0.ToString() + TaskerStore.Id.ToString();
+            }
+            else if (level == Level.Required)
+            {
+                Id = "id" + 1.ToString() + TaskerStore.Id.ToString();
+            }
+            else if (level == Level.Optional)
+            {
+                Id = "id" + 2.ToString() + TaskerStore.Id.ToString();
+            }
+            else if (level == Level.Other)
+            {
+                Id = "id" + 3.ToString() + TaskerStore.Id.ToString();
+            }
+            else
+            {
+                Id = "id" + 0.ToString();
+            }
+
             stackPanels = _stackpanels;
             DisplayTask(this);
             _stackpanels = stackPanels;
@@ -94,14 +120,44 @@ namespace Tasker
 
         
 
+        public void Delete()
+        {
+            if (level != Level.Urgent)
+            {
+                stackPanels[0].Children.Remove(this.border);
+            }
+            else if(level != Level.Required)
+            {
+                stackPanels[1].Children.Remove(this.border);
+            }
+            else if (level != Level.Optional)
+            {
+                stackPanels[2].Children.Remove(this.border);
+            }
+            else if (level != Level.Other)
+            {
+                stackPanels[3].Children.Remove(this.border);
+            }
+
+            title = null;
+            level = null;
+            description = null;
+            stackPanels = null;
+            Id = null;
+            border = null;
+
+
+        }
+
 
         public static void DisplayTask(Task _task)
         {
             // Defining Border.
             Border border = new Border();
+            border.Name = _task.Id;
             border.BorderThickness = new Thickness(2);
             border.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-            border.CornerRadius = new CornerRadius(2);
+            border.CornerRadius = new CornerRadius(5);
              
             // Defining grid.
             Grid grid = new Grid();
@@ -126,6 +182,7 @@ namespace Tasker
 
             // Defining title of task.
             Label title = new Label();
+            title.Name = "Title";
             title.Content = _task.title;
             title.FontSize = 12;
             title.HorizontalAlignment = HorizontalAlignment.Center;
@@ -137,6 +194,7 @@ namespace Tasker
 
             // Defining description of task.
             Label description = new Label();
+            description.Name = "Description";
             description.Content = _task.description;
             description.HorizontalAlignment = HorizontalAlignment.Center;
             description.VerticalAlignment = VerticalAlignment.Center;
@@ -148,16 +206,11 @@ namespace Tasker
             switch (_task.level)
             {
                 case Level.Urgent:
-
-                    title.Background = new SolidColorBrush(Color.FromRgb(222, 67, 92));
-
-
-                    description.Background = new SolidColorBrush(Color.FromRgb(222, 67, 92));
-
                     grid.Children.Add(title);
                     grid.Children.Add(description);
                     border.Child = grid;
-
+                    border.Tag = _task;
+                    _task.border = border;
                     _task.stackPanels[0].Children.Add(border);
                     break;
                 case Level.Required:
@@ -165,24 +218,32 @@ namespace Tasker
                     grid.Children.Add(title);
                     grid.Children.Add(description);
                     border.Child = grid;
+                    border.Tag = _task;
+                    _task.border = border;
                     _task.stackPanels[1].Children.Add(border);
                     break;
                 case Level.Optional:
                     grid.Children.Add(title);
                     grid.Children.Add(description);
                     border.Child = grid;
+                    border.Tag = _task;
+                    _task.border = border;
                     _task.stackPanels[2].Children.Add(border);
                     break;
                 case Level.Other:
                     grid.Children.Add(title);
                     grid.Children.Add(description);
                     border.Child = grid;
+                    border.Tag = _task;
+                    _task.border = border;
                     _task.stackPanels[3].Children.Add(border);
                     break;
                 case Level.RemovingList:
                     grid.Children.Add(title);
                     grid.Children.Add(description);
                     border.Child = grid;
+                    border.Tag = _task;
+                    _task.border = border;
                     _task.stackPanels[0].Children.Add(border);
                     break;
 
