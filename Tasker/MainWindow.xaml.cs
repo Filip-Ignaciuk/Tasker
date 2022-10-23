@@ -70,17 +70,17 @@ namespace Tasker
     }
 
     public enum Level { Urgent, Required, Optional, Other, RemovingList }
-    public class Task
+    public class Tasker
     {
         public string? title;
         public Level? level;
         public string? description;
         public StackPanel[]? stackPanels;
         public string? Id;
-        private Border? border;
+        public Border? border { get; private set; }
 
 
-        public Task(string _title, Level _level, string _description, ref StackPanel[] _stackpanels)
+        public Tasker(string _title, Level _level, string _description, ref StackPanel[] _stackpanels)
         {
             
 
@@ -122,21 +122,25 @@ namespace Tasker
 
         public void Delete()
         {
-            if (level != Level.Urgent)
+            if (level == Level.Urgent)
             {
                 stackPanels[0].Children.Remove(this.border);
             }
-            else if(level != Level.Required)
+            else if(level == Level.Required)
             {
                 stackPanels[1].Children.Remove(this.border);
             }
-            else if (level != Level.Optional)
+            else if (level == Level.Optional)
             {
                 stackPanels[2].Children.Remove(this.border);
             }
-            else if (level != Level.Other)
+            else if (level == Level.Other)
             {
                 stackPanels[3].Children.Remove(this.border);
+            }
+            else if (level == Level.RemovingList)
+            {
+                stackPanels[0].Children.Remove(this.border);
             }
 
             title = null;
@@ -150,7 +154,7 @@ namespace Tasker
         }
 
 
-        public static void DisplayTask(Task _task)
+        public static void DisplayTask(Tasker _task)
         {
             // Defining Border.
             Border border = new Border();

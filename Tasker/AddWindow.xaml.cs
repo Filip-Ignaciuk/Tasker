@@ -30,19 +30,19 @@ namespace Tasker
             var stackpanels = TaskerStore.CurrentStackpanels;
             if (radiobut1.IsChecked == true)
             {
-                Task task = new Task(TextBoxTitle.Text, Level.Urgent, TextBoxDescription.Text, ref stackpanels);
+                Tasker task = new Tasker(TextBoxTitle.Text, Level.Urgent, TextBoxDescription.Text, ref stackpanels);
             }
             else if (radiobut2.IsChecked == true)
             {
-                Task task = new Task(TextBoxTitle.Text, Level.Required, TextBoxDescription.Text, ref stackpanels);
+                Tasker task = new Tasker(TextBoxTitle.Text, Level.Required, TextBoxDescription.Text, ref stackpanels);
             }
             else if (radiobut3.IsChecked == true)
             {
-                Task task = new Task(TextBoxTitle.Text, Level.Optional, TextBoxDescription.Text, ref stackpanels);
+                Tasker task = new Tasker(TextBoxTitle.Text, Level.Optional, TextBoxDescription.Text, ref stackpanels);
             }
             else if (radiobut4.IsChecked == true)
             {
-                Task task = new Task(TextBoxTitle.Text, Level.Other, TextBoxDescription.Text, ref stackpanels);
+                Tasker task = new Tasker(TextBoxTitle.Text, Level.Other, TextBoxDescription.Text, ref stackpanels);
             }
             TaskerStore.CurrentStackpanels = stackpanels;
         }
