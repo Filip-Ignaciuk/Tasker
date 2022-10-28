@@ -19,7 +19,8 @@ namespace Tasker
     /// </summary>
     public partial class RemoveWindow : Window
     {
-        public static List<Tasker> currentValidTasks = new List<Tasker>();
+        public static List<Tasklet> currentValidTasks = new List<Tasklet>();
+        public static List<Button> currentValidButtons = new List<Button>();
 
         public bool isUrgent = true;
         public bool isRequired = true;
@@ -69,7 +70,7 @@ namespace Tasker
                     if (currentChild.GetType() == typeof(Border))
                     {
                         Border border = (Border)currentChild;
-                        Tasker task = border.Tag as Tasker;
+                        Tasklet task = border.Tag as Tasklet;
                         if (TaskExistsInRemovealStackpanel(border.Name))
                         {
                             break;
@@ -103,7 +104,10 @@ namespace Tasker
                         {
                             
                             currentValidTasks.Add(task);
-                            ContainsTextStackPanel.Children.Add(task.border);
+                            StackPanel[] stackpanelremoval = new StackPanel[1];
+                            stackpanelremoval[0] = ContainsTextStackPanel;
+                            Tasklet task1 = new Tasklet(task.title, Level.RemovingList, task.description, ref stackpanelremoval);
+
                         }
 
                     }
@@ -114,8 +118,6 @@ namespace Tasker
             {
                 ContainsTextStackPanel.Children.Clear();
                 currentValidTasks.Clear();
-
-
             }
 
 
@@ -123,7 +125,7 @@ namespace Tasker
 
         public static void IsTasksValid(string _text, StackPanel _stackpanel)
         {
-            List<Tasker> temptasks = currentValidTasks.ToList();
+            List<Tasklet> temptasks = currentValidTasks.ToList();
             if (currentValidTasks.Count != 0)
             {
                 foreach (var task in temptasks)
@@ -151,7 +153,7 @@ namespace Tasker
             }
             return false;
         }
-        public static bool TaskExistsInRemovealStackpanel(Tasker _task)
+        public static bool TaskExistsInRemovealStackpanel(Tasklet _task)
         {
             foreach (var task in currentValidTasks)
             {
@@ -163,29 +165,37 @@ namespace Tasker
             return false;
         }
 
-        public static void DeleteTasks(Tasker[] _tasks)
+        public static void DeleteTasks(Tasklet[] _tasks)
         {
-            foreach(Tasker task in _tasks)
+            foreach(Tasklet task in _tasks)
             {
                 task.Delete();
             }
         }
 
-        public static void RemoveTasksFromStackPanel(Tasker[] _tasks, StackPanel _stackpanel)
+        public static void RemoveTasksFromStackPanel(Tasklet[] _tasks, StackPanel _stackpanel)
         {
-            foreach (Tasker task in _tasks)
+            foreach (Tasklet task in _tasks)
             {
                 _stackpanel.Children.Remove(task.border);
             }
         }
 
-        public static void RemoveTaskFromStackPanel(Tasker _task, StackPanel _stackpanel)
+        public static void RemoveTaskFromStackPanel(Tasklet _task, StackPanel _stackpanel)
         {
             _stackpanel.Children.Remove(_task.border);
         }
 
+        public static void MakeSelectButton(Tasklet _task)
+        {
+
+            CheckBox checkbox = new CheckBox();
+            checkbox.Name = _task.Id + "select";
 
 
+        }
+
+        
 
         private void CheckBox1_Checked(object sender, RoutedEventArgs e)
         {
@@ -229,7 +239,7 @@ namespace Tasker
 
         private void Delete_All_Click(object sender, RoutedEventArgs e)
         {
-            Tasker[] toBeDeletedTasks = currentValidTasks.ToArray();
+            Tasklet[] toBeDeletedTasks = currentValidTasks.ToArray();
             DeleteTasks(toBeDeletedTasks);
             ContainsTextStackPanel.Children.Clear();
             currentValidTasks.Clear();

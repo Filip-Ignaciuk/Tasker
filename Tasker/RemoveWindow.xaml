@@ -53,7 +53,7 @@
 
 
             <ScrollViewer Grid.Row="3">
-                <StackPanel x:Name="ContainsTextStackPanel">
+                <StackPanel x:Name="ContainsTextStackPanel" >
 
                 </StackPanel>
             </ScrollViewer>

@@ -37,7 +37,7 @@ namespace Tasker
 
 
             TaskerStore.MainGrid = MainGrid;
-
+            
 
         }
         
@@ -70,7 +70,7 @@ namespace Tasker
     }
 
     public enum Level { Urgent, Required, Optional, Other, RemovingList }
-    public class Tasker
+    public class Tasklet
     {
         public string? title;
         public Level? level;
@@ -80,7 +80,7 @@ namespace Tasker
         public Border? border { get; private set; }
 
 
-        public Tasker(string _title, Level _level, string _description, ref StackPanel[] _stackpanels)
+        public Tasklet(string _title, Level _level, string _description, ref StackPanel[] _stackpanels)
         {
             
 
@@ -154,15 +154,15 @@ namespace Tasker
         }
 
 
-        public static void DisplayTask(Tasker _task)
+        public static void DisplayTask(Tasklet _task)
         {
             // Defining Border.
             Border border = new Border();
             border.Name = _task.Id;
             border.BorderThickness = new Thickness(2);
             border.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-            border.CornerRadius = new CornerRadius(5);
-             
+            border.CornerRadius = new CornerRadius(5); 
+
             // Defining grid.
             Grid grid = new Grid();
             grid.HorizontalAlignment = HorizontalAlignment.Center;
@@ -248,6 +248,14 @@ namespace Tasker
                     border.Child = grid;
                     border.Tag = _task;
                     _task.border = border;
+
+
+                    
+
+                    
+
+
+
                     _task.stackPanels[0].Children.Add(border);
                     break;
 
