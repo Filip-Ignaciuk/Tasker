@@ -19,8 +19,8 @@ namespace Tasker
     /// </summary>
     public partial class RemoveWindow : Window
     {
-        public static List<Tasklet> currentValidTasks = new List<Tasklet>();
-        public static List<Button> currentValidButtons = new List<Button>();
+        public static Dictionary<Tasklet, bool> currentValidTasks = new Dictionary<Tasklet, bool>();
+        public static bool currentValidTasksIsUsed = false;
 
         public bool isUrgent = true;
         public bool isRequired = true;
@@ -102,12 +102,13 @@ namespace Tasker
 
                         if (doesContain && !TaskExistsInRemovealStackpanel(task))
                         {
-                            
-                            currentValidTasks.Add(task);
+
+                            currentValidTasks.Add(task, false);
+
                             StackPanel[] stackpanelremoval = new StackPanel[1];
                             stackpanelremoval[0] = ContainsTextStackPanel;
-                            Tasklet task1 = new Tasklet(task.title, Level.RemovingList, task.description, ref stackpanelremoval);
-
+                            Tasklet task1 = new Tasklet(task.title, Level.RemovingList, task.description, ref stackpanelremoval, task.Id);
+                            ContainsTextStackPanel.Children.Add(MakeSelectButton(task));
                         }
 
                     }
@@ -123,9 +124,20 @@ namespace Tasker
 
         }
 
+        public static void WaitForCurrentValidTasks()
+        {
+            while (currentValidTasksIsUsed)
+            {
+                System.Threading.Thread.Sleep(500);
+            }
+
+        }
+
         public static void IsTasksValid(string _text, StackPanel _stackpanel)
         {
-            List<Tasklet> temptasks = currentValidTasks.ToList();
+            WaitForCurrentValidTasks();
+            currentValidTasksIsUsed = true;
+            List<Tasklet> temptasks = currentValidTasks.Keys.ToList();
             if (currentValidTasks.Count != 0)
             {
                 foreach (var task in temptasks)
@@ -139,29 +151,38 @@ namespace Tasker
                 }
             }
 
-            
+            currentValidTasksIsUsed = false;
+
         }
 
         public static bool TaskExistsInRemovealStackpanel(string _id)
         {
-            foreach(var task in currentValidTasks)
+            WaitForCurrentValidTasks();
+            currentValidTasksIsUsed = true;
+            foreach (var task in currentValidTasks.Keys)
             {
                 if (task.Id == _id)
                 {
+                    currentValidTasksIsUsed = false;
                     return true;
                 }
             }
+            currentValidTasksIsUsed = false;
             return false;
         }
         public static bool TaskExistsInRemovealStackpanel(Tasklet _task)
         {
-            foreach (var task in currentValidTasks)
+            WaitForCurrentValidTasks();
+            currentValidTasksIsUsed = true;
+            foreach (var task in currentValidTasks.Keys)
             {
                 if (task.Id == _task.Id)
                 {
+                    currentValidTasksIsUsed = false;
                     return true;
                 }
             }
+            currentValidTasksIsUsed = false;
             return false;
         }
 
@@ -186,16 +207,69 @@ namespace Tasker
             _stackpanel.Children.Remove(_task.border);
         }
 
-        public static void MakeSelectButton(Tasklet _task)
+
+
+        public static CheckBox MakeSelectButton(Tasklet _task)
         {
 
             CheckBox checkbox = new CheckBox();
             checkbox.Name = _task.Id + "select";
+            checkbox.Tag = _task;
+            checkbox.Checked += Select_Check;
+            checkbox.Unchecked += Select_Uncheck;
 
+            return checkbox;
+        }
+
+        private static void Select_Check(object sender, RoutedEventArgs e)
+        {
+            WaitForCurrentValidTasks();
+            currentValidTasksIsUsed = true;
+            CheckBox checkbox = sender as CheckBox;
+
+            if (checkbox.Tag.GetType() == typeof(Tasklet))
+            {
+                for (int i = 0; i < currentValidTasks.Count; i++)
+                {
+                    var currentKey = currentValidTasks.ElementAt(i).Key;
+                    if (currentKey == checkbox.Tag)
+                    {
+
+                        currentValidTasks.Remove(currentKey);
+                        currentValidTasks.Add(currentKey, true);
+                        
+                    }
+                }
+            }
+            currentValidTasksIsUsed = false;
 
         }
 
-        
+        private static void Select_Uncheck(object sender, RoutedEventArgs e)
+        {
+            WaitForCurrentValidTasks();
+            currentValidTasksIsUsed = true;
+            CheckBox checkbox = sender as CheckBox;
+
+            if (checkbox.Tag.GetType() == typeof(Tasklet))
+            {
+                for (int i = 0; i < currentValidTasks.Count; i++)
+                {
+                    var currentKey = currentValidTasks.ElementAt(i).Key;
+                    if (currentKey == checkbox.Tag)
+                    {
+
+                        currentValidTasks.Remove(currentKey);
+                        currentValidTasks.Add(currentKey, false);
+                    }
+                }
+            }
+            currentValidTasksIsUsed = false;
+        }
+
+
+
+
 
         private void CheckBox1_Checked(object sender, RoutedEventArgs e)
         {
@@ -239,15 +313,68 @@ namespace Tasker
 
         private void Delete_All_Click(object sender, RoutedEventArgs e)
         {
-            Tasklet[] toBeDeletedTasks = currentValidTasks.ToArray();
+            WaitForCurrentValidTasks();
+            currentValidTasksIsUsed = true;
+            Tasklet[] toBeDeletedTasks = currentValidTasks.Keys.ToArray();
             DeleteTasks(toBeDeletedTasks);
             ContainsTextStackPanel.Children.Clear();
             currentValidTasks.Clear();
+            currentValidTasksIsUsed = false;
         }
 
         private void Delete_Selected_Click(object sender, RoutedEventArgs e)
         {
+            WaitForCurrentValidTasks();
+            currentValidTasksIsUsed = true;
+            
+            List<Tasklet> uncheackedtasks = new List<Tasklet>();
+            for (int i = 0; i < currentValidTasks.Count; i++)
+            {
+                var kvp = currentValidTasks.ElementAt(i);
+                if (kvp.Value == true)
+                {
 
+                    for (int j = 0; i < ContainsTextStackPanel.Children.Count; i++)
+                    {
+                        bool checkboxcheck = false;
+                        if (ContainsTextStackPanel.Children[j].GetType() == typeof(Border))
+                        {
+                            checkboxcheck = true;
+                            Border border = (Border)ContainsTextStackPanel.Children[j];
+                            Tasklet task = (Tasklet)border.Tag;
+
+                            if (task.Id != null && kvp.Key.Id != null && task.Id.ToString() == kvp.Key.Id.ToString())
+                            {
+                                kvp.Key.Delete();
+                                task.Delete();
+                            }
+                        }
+                        if (ContainsTextStackPanel.Children[j].GetType() == typeof(CheckBox) && checkboxcheck)
+                        {
+                            ContainsTextStackPanel.Children.Remove(ContainsTextStackPanel.Children[j]);
+                            
+                            checkboxcheck = false;  
+                        }
+                    }
+
+                }
+                
+            }
+            currentValidTasksIsUsed = false;
+        }
+
+
+        public bool IsClosed { get; private set; }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            currentValidTasks.Clear();
+            ContainsTextStackPanel.Children.Clear();
+
+
+            IsClosed = true;
         }
     }
 }

@@ -118,7 +118,25 @@ namespace Tasker
             
         }
 
-        
+        public Tasklet(string _title, Level _level, string _description, ref StackPanel[] _stackpanels, string _id)
+        {
+
+
+
+            title = _title;
+            level = _level;
+            description = _description;
+
+
+            // Assigning ID
+            Id = _id;
+
+            stackPanels = _stackpanels;
+            DisplayTask(this);
+            _stackpanels = stackPanels;
+
+        }
+
 
         public void Delete()
         {
