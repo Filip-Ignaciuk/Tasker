@@ -30,7 +30,7 @@ namespace Tasker
             names.Add("Optional");
             names.Add("Other");
 
-            Profile profile = new Profile(names, "defaut");
+            Profile profile = new Profile(names, "default");
             TaskerConfigurator.SaveProfile(profile);
 
             StreamWriter lts = new StreamWriter(TaskerStore.DocumentDir + @"\Tasker\lts.txt");
@@ -119,6 +119,8 @@ namespace Tasker
 
         public static Profile LoadProfile(string _path)
         {
+            _path = _path.Replace("\r", "");
+            _path = _path.Replace("\n", "");
             Stream stream = File.Open(_path, FileMode.Open);
             BinaryFormatter formatter = new BinaryFormatter();
             Profile profile = (Profile)formatter.Deserialize(stream);

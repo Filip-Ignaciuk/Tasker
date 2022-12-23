@@ -20,15 +20,17 @@ namespace Tasker
     public class Profile : ISerializable
     {
         public string nameOfProfile;
-        public List<>
+        private List<string> namesOfLabels = new List<string>();
         public List<StackPanel> stackPanels = new List<StackPanel>();
         public List<Label> labels = new List<Label>();
         public List<ScrollViewer> scrollViewers = new List<ScrollViewer>();
         public int stackpanelcount = 0;
         public Profile(List<string> _namesOfContainters, string _nameOfProfile)
         {
+            nameOfProfile = _nameOfProfile;
             foreach (var name in _namesOfContainters)
             {
+                namesOfLabels.Add(name);
                 Label label = new Label();
                 label.Content = name;
                 label.HorizontalAlignment = HorizontalAlignment.Center;
@@ -70,20 +72,20 @@ namespace Tasker
         public Profile(SerializationInfo info, StreamingContext context)
         {
             nameOfProfile = (string)info.GetValue("NameOfProfile", typeof(string));
-            labels = (List<Label>)info.GetValue("Labels", typeof(List<Label>));
+            namesOfLabels = (List<string>)info.GetValue("NamesOfLabels", typeof(List<string>));
 
-            foreach (var name in labels)
+            foreach (var name in namesOfLabels)
             {
                 Label label = new Label();
                 label.Content = name;
                 label.HorizontalAlignment = HorizontalAlignment.Center;
                 label.VerticalAlignment = VerticalAlignment.Center;
 
-                Grid.SetColumn(label, labels.IndexOf(name));
+                Grid.SetColumn(label, namesOfLabels.IndexOf(name));
 
                 ScrollViewer scrollViewer = new ScrollViewer();
 
-                Grid.SetColumn(scrollViewer, labels.IndexOf(name));
+                Grid.SetColumn(scrollViewer, namesOfLabels.IndexOf(name));
                 Grid.SetRow(scrollViewer, 1);
 
                 StackPanel stackpanel = new StackPanel();
@@ -104,7 +106,7 @@ namespace Tasker
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("NameOfProfile", nameOfProfile);
-            info.AddValue("Labels", labels);
+            info.AddValue("NamesOfLabels", namesOfLabels);
         }
 
     }

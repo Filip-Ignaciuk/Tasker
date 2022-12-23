@@ -27,7 +27,10 @@ namespace Tasker
         {
             InitializeComponent();
 
-            if(!TaskerConfigurator.isinitialised)
+            TaskerStore.MainGrid = MainGrid;
+            TaskerStore.StackPanelsContainerGrid = StackPanelsContainer;
+
+            if (!TaskerConfigurator.isinitialised)
             {
                 TaskerConfigurator.TaskerSetup();
             }
@@ -48,8 +51,7 @@ namespace Tasker
             //TaskerStore.CurrentStackpanels = stackPanelsLive;
 
 
-            TaskerStore.MainGrid = MainGrid;
-            TaskerStore.StackPanelsContainerGrid = StackPanelsContainer;
+            
 
         }
         
