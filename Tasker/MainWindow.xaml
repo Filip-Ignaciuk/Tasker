@@ -21,6 +21,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Content="Add" Margin="8" Click="Add">
@@ -31,17 +33,25 @@
 
             </Button>
 
-            <Button Grid.Column="2" Content="Settings" Margin="8" Click="Settings">
+            <Button Grid.Column="2" Content="Save" Margin="8" Click="Save">
 
             </Button>
 
-            
+            <Button Grid.Column="3" Content="Load" Margin="8" Click="Load">
+
+            </Button>
+
+            <Button Grid.Column="4" Content="Settings" Margin="8" Click="Settings">
+
+            </Button>
+
+
 
         </Grid>
         
         
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" x:Name="StackPanelsContainer">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

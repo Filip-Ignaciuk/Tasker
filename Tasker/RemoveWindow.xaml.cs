@@ -22,6 +22,8 @@ namespace Tasker
         public static Dictionary<Tasklet, bool> currentValidTasks = new Dictionary<Tasklet, bool>();
         public static bool currentValidTasksIsUsed = false;
 
+        public static StackPanel[] stackpanelremoval = new StackPanel[1];
+
         public bool isUrgent = true;
         public bool isRequired = true;
         public bool isOptional = true;
@@ -29,6 +31,7 @@ namespace Tasker
         public RemoveWindow()
         {
             InitializeComponent();
+            stackpanelremoval[0] = ContainsTextStackPanel;
         }
 
         private void TextBoxTitle_TextChanged(object sender, TextChangedEventArgs e)
@@ -105,9 +108,9 @@ namespace Tasker
 
                             currentValidTasks.Add(task, false);
 
-                            StackPanel[] stackpanelremoval = new StackPanel[1];
-                            stackpanelremoval[0] = ContainsTextStackPanel;
-                            Tasklet task1 = new Tasklet(task.title, Level.RemovingList, task.description, ref stackpanelremoval, task.Id);
+                            
+                            Tasklet task1 = new Tasklet(task.title, null, task.description, ref stackpanelremoval, task.Id);
+                            Tasklet.DisplayTask(task1);
                             ContainsTextStackPanel.Children.Add(MakeSelectButton(task));
                         }
 
@@ -326,9 +329,7 @@ namespace Tasker
         {
             WaitForCurrentValidTasks();
             currentValidTasksIsUsed = true;
-            
-            List<Tasklet> uncheackedtasks = new List<Tasklet>();
-            for (int i = 0; i < currentValidTasks.Count; i++)
+            for (int i = 0; i < currentValidTasks.Count - 1; i++)
             {
                 var kvp = currentValidTasks.ElementAt(i);
                 if (kvp.Value == true)
