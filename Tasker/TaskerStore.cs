@@ -45,11 +45,35 @@ namespace Tasker
 
         public static Profile Profile
         {
+
             get { return _profile; }
             set 
             {
+                
+
+
+
                 _profile = value;
+                CurrentStackpanels = _profile.stackPanels.ToArray();
                 StackPanelsContainerGrid.Children.Clear();
+                for (int i = 0; i < value.stackpanelcount; i++)
+                {
+                    // Defining columns.
+                    ColumnDefinition columnDefinition = new ColumnDefinition();
+                    columnDefinition.Width = new GridLength(2, GridUnitType.Star);
+                    StackPanelsContainerGrid.ColumnDefinitions.Add(columnDefinition);
+
+                    
+                }
+
+                // Defining rows.
+                RowDefinition rowDefinition = new RowDefinition();
+                rowDefinition.Height = new GridLength(40, GridUnitType.Pixel);
+                StackPanelsContainerGrid.RowDefinitions.Add(rowDefinition);
+                rowDefinition = new RowDefinition();
+                rowDefinition.Height = new GridLength(2, GridUnitType.Star);
+                StackPanelsContainerGrid.RowDefinitions.Add(rowDefinition);
+
                 foreach (var label in _profile.labels)
                 {
                     StackPanelsContainerGrid.Children.Add(label);
