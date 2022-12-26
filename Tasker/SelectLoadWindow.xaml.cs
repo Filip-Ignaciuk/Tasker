@@ -34,7 +34,8 @@ namespace Tasker
 
             if (result == true && dialog.CheckPathExists)
             {
-                Profile profile = TaskerConfigurator.LoadProfile(dialog.InitialDirectory);
+                string path = dialog.FileName;
+                Profile profile = TaskerConfigurator.LoadProfile(path);
                 TaskerStore.Profile = profile;
                 StreamWriter streamWriter = new StreamWriter(TaskerStore.DocumentDir + @"\Tasker\lp.txt");
                 streamWriter.WriteLine(dialog.InitialDirectory);
