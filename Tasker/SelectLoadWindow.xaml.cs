@@ -45,7 +45,7 @@ namespace Tasker
 
         private void Tasklet_Click(object sender, RoutedEventArgs e)
         {
-
+            TaskerStore.CurrentTasks = TaskerConfigurator.LoadTasklets().ToList();
         }
     }
 }

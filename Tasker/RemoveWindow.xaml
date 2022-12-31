@@ -21,42 +21,25 @@
             <Label Grid.Row="0" Content="Remove by Title" Margin="10,0,10,0" FontSize="14" >
 
             </Label>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
 
+            <CheckBox Grid.Row="1" Margin="20, 10, 20, 10" Content="Is Case Sensitive" x:Name="CaseSensitiveCheckBox" IsChecked="False" Checked="CaseSensitiveCheckBox_Checked" Unchecked="CaseSensitiveCheckBox_Unchecked">
+                
+            </CheckBox>
+            
+            <ScrollViewer Grid.Row="2">
+                <StackPanel x:Name="ContainsTextStackPanel" >
 
-                <CheckBox x:Name="CheckBox0"  Content="Urgent" Grid.Row="0" Grid.Column="0" IsChecked="True" Checked="CheckBox0_Checked" Unchecked="CheckBox0_Unchecked">
+                </StackPanel>
+            </ScrollViewer>
 
-                </CheckBox>
-                <CheckBox x:Name="CheckBox1"  Content="Required" Grid.Row="1" Grid.Column="0" IsChecked="True" Checked="CheckBox1_Checked" Unchecked="CheckBox1_Unchecked">
-
-                </CheckBox>
-                <CheckBox x:Name="CheckBox2"  Content="Optional" Grid.Row="0" Grid.Column="1" IsChecked="True" Checked="CheckBox2_Checked" Unchecked="CheckBox2_Unchecked">
-
-                </CheckBox>
-                <CheckBox x:Name="CheckBox3"  Content="Other" Grid.Row="2" Grid.Column="1" IsChecked="True" Checked="CheckBox3_Checked" Unchecked="CheckBox3_Unchecked">
-
-                </CheckBox>
-            </Grid>
-            <TextBox Grid.Row="2" Margin="20, 10, 20, 10" Padding="2" FontSize="12" x:Name="TextBoxInput" TextChanged="TextBoxTitle_TextChanged">
+            <TextBox Grid.Row="3" Margin="20, 10, 20, 10" Padding="2" FontSize="12" x:Name="TextBoxInput" TextChanged="TextBoxInput_TextChanged">
 
             </TextBox>
 
             
 
 
-            <ScrollViewer Grid.Row="3">
-                <StackPanel x:Name="ContainsTextStackPanel" >
-
-                </StackPanel>
-            </ScrollViewer>
+            
 
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>

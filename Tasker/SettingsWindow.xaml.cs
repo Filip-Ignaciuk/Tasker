@@ -38,12 +38,18 @@ namespace Tasker
         {
             if (Dark_Mode.IsChecked == true)
             {
-                TaskerStore.MainGrid.Background = new SolidColorBrush(Color.FromRgb(59, 58, 57));
+
+                
+
 
             }
+
             if(Dark_Mode.IsChecked == false)
             {
-                TaskerStore.MainGrid.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                foreach (var stackPanel in TaskerStore.CurrentStackpanels)
+                {
+                    stackPanel.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                }
             }
         }
     }

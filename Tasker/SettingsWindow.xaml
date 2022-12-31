@@ -37,7 +37,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <CheckBox x:Name="Dark_Mode" Margin="20, 10,0,10" IsChecked="True" IsEnabledChanged="Dark_Mode_IsEnabledChanged">
+                <CheckBox x:Name="Dark_Mode" Margin="20, 10,0,10" IsChecked="False" IsEnabledChanged="Dark_Mode_IsEnabledChanged">
                     
                 </CheckBox>
                 <Label Grid.Column="1" Content="Dark Mode" VerticalAlignment="Center">

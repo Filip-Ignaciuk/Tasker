@@ -38,21 +38,14 @@ namespace Tasker
             TaskerStore.SetIdNumber();
             TaskerStore.SetProfile();
 
-
-
-
-
-            //Definitions of Stackpanels
-            //StackPanel[] stackPanelsLive = new StackPanel[4];
-            //stackPanelsLive[0] = Urgent;
-            //stackPanelsLive[1] = Required;
-            //stackPanelsLive[2] = Optional;
-            //stackPanelsLive[3] = Other;
-            //TaskerStore.CurrentStackpanels = stackPanelsLive;
-
-
-            
-
+            TaskerStore.ActiveElements.Add(MainGrid);
+            TaskerStore.ActiveElements.Add(AddButton);
+            TaskerStore.ActiveElements.Add(RemoveButton);
+            TaskerStore.ActiveElements.Add(SaveTButton);
+            TaskerStore.ActiveElements.Add(SavePButton);
+            TaskerStore.ActiveElements.Add(LoadButton);
+            TaskerStore.ActiveElements.Add(SettingsButton);
+            TaskerStore.ActiveElements.Add(StackPanelsContainer);
         }
         
         
@@ -65,9 +58,10 @@ namespace Tasker
 
         private void Add(object sender, RoutedEventArgs e)
         {
-            AddWindow addWindow = new AddWindow();
-            addWindow.Show();
-            
+            SelectAddWindow SelectAddWindow = new SelectAddWindow();
+            SelectAddWindow.Show();
+
+
         }
 
         private void Remove(object sender, RoutedEventArgs e)
@@ -82,9 +76,14 @@ namespace Tasker
             settingsWindow.Show();
         }
 
-        private void Save(object sender, RoutedEventArgs e)
+        private void SaveTasklets(object sender, RoutedEventArgs e)
         {
             TaskerConfigurator.SaveTasklets();
+        }
+
+        private void SaveProfile(object sender, RoutedEventArgs e)
+        {
+            TaskerConfigurator.SaveProfile(TaskerStore.Profile);
         }
 
         private void Load(object sender, RoutedEventArgs e)
@@ -92,12 +91,7 @@ namespace Tasker
             SelectLoadWindow selectLoadWindow = new SelectLoadWindow();
             selectLoadWindow.Show();
 
-            //Tasklet[] tasklets = TaskerConfigurator.LoadTasklets();
-            //foreach (Tasklet tasklet in tasklets)
-            //{
-            //    tasklet.stackPanels = TaskerStore.CurrentStackpanels;
-            //    Tasklet.DisplayTask(tasklet);
-            //}
+            
         }
     }
 

@@ -19,198 +19,182 @@ namespace Tasker
     /// </summary>
     public partial class RemoveWindow : Window
     {
-        public static Dictionary<Tasklet, bool> currentValidTasks = new Dictionary<Tasklet, bool>();
-        public static bool currentValidTasksIsUsed = false;
+        static bool IsCaseSensitive = false;
+        static bool IsEmpty = false;
+        static StackPanel[] containsTextStackPanel = new StackPanel[1];
 
-        public static StackPanel[] stackpanelremoval = new StackPanel[1];
 
-        public bool isUrgent = true;
-        public bool isRequired = true;
-        public bool isOptional = true;
-        public bool isOther = true;
+        static List<Tasklet> validTasks = new List<Tasklet>();
+        static List<Border> borders = new List<Border>();
+        static List<int> stackPanelNumber = new List<int>();
+        static List<bool> IsChecked = new List<bool>();
         public RemoveWindow()
         {
             InitializeComponent();
-            stackpanelremoval[0] = ContainsTextStackPanel;
+            containsTextStackPanel[0] = ContainsTextStackPanel;
         }
 
-        private void TextBoxTitle_TextChanged(object sender, TextChangedEventArgs e)
+        private void TextBoxInput_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IsTasksValid(TextBoxInput.Text, ContainsTextStackPanel);
-            
-
-
-            foreach (var stackpanel in TaskerStore.CurrentStackpanels)
+            IsEmpty = false;
+            string text = TextBoxInput.Text;
+            CheckIfTasksAreValid(text, ContainsTextStackPanel);
+            if (text == String.Empty)
             {
-                StackPanel tempstackpanel = stackpanel;
-                
-                if (tempstackpanel == null)
-                {
-                    break;
-                    
-                }
+                containsTextStackPanel[0].Children.Clear();
+                validTasks.Clear();
+                borders.Clear();
+                stackPanelNumber.Clear();
+                IsChecked.Clear();
+                IsEmpty = true;
+            }
 
-                if (tempstackpanel.Name == "Urgent" && !isUrgent)
+            if (!IsEmpty)
+            {
+                for (int i = 0; i < TaskerStore.CurrentTasks.Count; i++)
                 {
-                    break;
-                }
-                else if (tempstackpanel.Name == "Required" && !isRequired)
-                {
-                    break;
-                }
-                else if (tempstackpanel.Name == "Optional" && !isOptional)
-                {
-                    break;
-                }
-                else if (tempstackpanel.Name == "Other" && !isOther)
-                {
-                    break;
-                }
-
-                for (int i = 0; i < tempstackpanel.Children.Count; i++)
-                {
-                    var currentChild = tempstackpanel.Children[i];
-                    if (currentChild.GetType() == typeof(Border))
+                    if (IsCaseSensitive)
                     {
-                        Border border = (Border)currentChild;
-                        Tasklet task = border.Tag as Tasklet;
-                        if (TaskExistsInRemovealStackpanel(border.Name))
+                        if ((TaskerStore.CurrentTasks[i].title.Contains(text) || TaskerStore.CurrentTasks[i].description.Contains(text)) && !IsAlreadyIn(TaskerStore.CurrentTasks[i]))
                         {
-                            break;
+                            validTasks.Add(TaskerStore.CurrentTasks[i]);
+                            stackPanelNumber.Add((int)TaskerStore.CurrentTasks[i].stackPanelNumber);
+
+                            TaskerStore.CurrentTasks[i].stackPanelNumber = 0;
+
+                            TaskerStore.CurrentTasks[i].stackPanels = containsTextStackPanel;
+
+
+                            IsChecked.Add(false);
+
+                            Tasklet.DisplayTask(TaskerStore.CurrentTasks[i]);
+                            borders.Add(TaskerStore.CurrentTasks[i].border);
+
+                            containsTextStackPanel[0].Children.Add(MakeSelectButton(TaskerStore.CurrentTasks[i]));
                         }
-
-                        bool doesContain = false;
-                        string Title = string.Empty;
-                        string Description = string.Empty;
-
-                        Title = task.title;
-                        Description = task.description;
-
-                        if (Title != null && Description != null)
+                    }
+                    else if (!IsCaseSensitive)
+                    {
+                        if ((TaskerStore.CurrentTasks[i].title.ToLower().Contains(text.ToLower()) || TaskerStore.CurrentTasks[i].description.ToLower().Contains(text.ToLower())) && !IsAlreadyIn(TaskerStore.CurrentTasks[i]))
                         {
-                            if (Title.Contains(TextBoxInput.Text))
-                            {
-                                doesContain = true;
-                            }
+                            validTasks.Add(TaskerStore.CurrentTasks[i]);
+                            stackPanelNumber.Add((int)TaskerStore.CurrentTasks[i].stackPanelNumber);
 
-                            if (Description.Contains(TextBoxInput.Text))
-                            {
-                                doesContain = true;
-                            }
+                            TaskerStore.CurrentTasks[i].stackPanelNumber = 0;
+
+                            TaskerStore.CurrentTasks[i].stackPanels = containsTextStackPanel;
+
+                            IsChecked.Add(false);
+
+                            Tasklet.DisplayTask(TaskerStore.CurrentTasks[i]);
+                            borders.Add(TaskerStore.CurrentTasks[i].border);
+
+                            containsTextStackPanel[0].Children.Add(MakeSelectButton(TaskerStore.CurrentTasks[i]));
+
+
+                                
                         }
-                        else
-                        {
-                            doesContain = false;
-                        }
-
-                        if (doesContain && !TaskExistsInRemovealStackpanel(task))
-                        {
-
-                            currentValidTasks.Add(task, false);
-
-                            
-                            Tasklet task1 = new Tasklet(task.title, null, task.description, ref stackpanelremoval, task.Id);
-                            Tasklet.DisplayTask(task1);
-                            ContainsTextStackPanel.Children.Add(MakeSelectButton(task));
-                        }
-
                     }
                 }
             }
 
-            if (TextBoxInput.Text == "")
-            {
-                ContainsTextStackPanel.Children.Clear();
-                currentValidTasks.Clear();
-            }
-
 
         }
-
-        public static void WaitForCurrentValidTasks()
+        private static void CheckStackPanel()
         {
-            while (currentValidTasksIsUsed)
+            for (int i = 0; i < containsTextStackPanel[0].Children.Count; i++)
             {
-                System.Threading.Thread.Sleep(500);
-            }
-
-        }
-
-        public static void IsTasksValid(string _text, StackPanel _stackpanel)
-        {
-            WaitForCurrentValidTasks();
-            currentValidTasksIsUsed = true;
-            List<Tasklet> temptasks = currentValidTasks.Keys.ToList();
-            if (currentValidTasks.Count != 0)
-            {
-                foreach (var task in temptasks)
+                for (int j = 0; j < containsTextStackPanel[0].Children.Count; j++)
                 {
-                    if (task.title.Contains(_text) == false && task.description.Contains(_text) == false)
+                    if(containsTextStackPanel[0].Children[i].GetType() == typeof(Border) && containsTextStackPanel[0].Children[j].GetType() == typeof(Border))
+                    {
+                        Border border = (Border)containsTextStackPanel[0].Children[i];
+                        Border border1 = (Border)containsTextStackPanel[0].Children[j];
+                        Tasklet tasklet = (Tasklet)border.Tag;
+                        Tasklet tasklet1 = (Tasklet)border1.Tag;
+
+                        if (border != border1 && tasklet.Id == tasklet1.Id)
+                        {
+                            containsTextStackPanel[0].Children.Remove(border1);
+                        }
+                    }
+                }
+            }
+            
+        }
+
+        private static bool IsAlreadyIn(Tasklet _tasklet)
+        {
+            for (int i = 0; i < validTasks.Count; i++)
+            {
+                if(_tasklet.Id == validTasks[i].Id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static void CheckIfTasksAreValid(string _text, StackPanel _stackpanel)
+        {
+            for (int i = 0; i < validTasks.Count; i++)
+            {
+                if (IsCaseSensitive)
+                {
+                    if (!(validTasks[i].title.Contains(_text)) && !(validTasks[i].description.Contains(_text)))
                     {
                         
-                        RemoveTaskFromStackPanel(task, _stackpanel);
-                        currentValidTasks.Remove(task);
+                        Border tasklet = borders[i];
+                        containsTextStackPanel[i].Children.RemoveAt(containsTextStackPanel[i].Children.IndexOf(tasklet) + 1);
+                        _stackpanel.Children.Remove(tasklet);
+
+                        validTasks[i].stackPanels = TaskerStore.CurrentStackpanels;
+                        validTasks[i].stackPanelNumber = stackPanelNumber[i];
+
+                        validTasks.RemoveAt(i);
+                        borders.RemoveAt(i);
+                        stackPanelNumber.RemoveAt(i);
+                        IsChecked.RemoveAt(i);
+                        
+
+
+                        i = 0;
+                    }
+                }
+                else if (!IsCaseSensitive)
+                {
+                    if (!(validTasks[i].title.ToLower().Contains(_text.ToLower())) && !(validTasks[i].description.ToLower().Contains(_text.ToLower())))
+                    {
+                        Border tasklet = borders[i];
+                        containsTextStackPanel[i].Children.RemoveAt(containsTextStackPanel[i].Children.IndexOf(tasklet) + 1);
+                        _stackpanel.Children.Remove(tasklet);
+
+                        validTasks[i].stackPanels = TaskerStore.CurrentStackpanels;
+                        validTasks[i].stackPanelNumber = stackPanelNumber[i];
+
+                        validTasks.RemoveAt(i);
+                        borders.RemoveAt(i);
+                        stackPanelNumber.RemoveAt(i);
+                        IsChecked.RemoveAt(i);
+
+
+
+                        i = 0;
                     }
                 }
             }
-
-            currentValidTasksIsUsed = false;
-
         }
 
-        public static bool TaskExistsInRemovealStackpanel(string _id)
+
+        private void CaseSensitiveCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            WaitForCurrentValidTasks();
-            currentValidTasksIsUsed = true;
-            foreach (var task in currentValidTasks.Keys)
-            {
-                if (task.Id == _id)
-                {
-                    currentValidTasksIsUsed = false;
-                    return true;
-                }
-            }
-            currentValidTasksIsUsed = false;
-            return false;
+            IsCaseSensitive = true;
         }
-        public static bool TaskExistsInRemovealStackpanel(Tasklet _task)
+
+        private void CaseSensitiveCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            WaitForCurrentValidTasks();
-            currentValidTasksIsUsed = true;
-            foreach (var task in currentValidTasks.Keys)
-            {
-                if (task.Id == _task.Id)
-                {
-                    currentValidTasksIsUsed = false;
-                    return true;
-                }
-            }
-            currentValidTasksIsUsed = false;
-            return false;
+            IsCaseSensitive = false;
         }
-
-        public static void DeleteTasks(Tasklet[] _tasks)
-        {
-            foreach(Tasklet task in _tasks)
-            {
-                task.Delete();
-            }
-        }
-
-        public static void RemoveTasksFromStackPanel(Tasklet[] _tasks, StackPanel _stackpanel)
-        {
-            foreach (Tasklet task in _tasks)
-            {
-                _stackpanel.Children.Remove(task.border);
-            }
-        }
-
-        public static void RemoveTaskFromStackPanel(Tasklet _task, StackPanel _stackpanel)
-        {
-            _stackpanel.Children.Remove(_task.border);
-        }
-
-
 
         public static CheckBox MakeSelectButton(Tasklet _task)
         {
@@ -226,156 +210,130 @@ namespace Tasker
 
         private static void Select_Check(object sender, RoutedEventArgs e)
         {
-            WaitForCurrentValidTasks();
-            currentValidTasksIsUsed = true;
             CheckBox checkbox = sender as CheckBox;
 
             if (checkbox.Tag.GetType() == typeof(Tasklet))
             {
-                for (int i = 0; i < currentValidTasks.Count; i++)
+                for (int i = 0; i < validTasks.Count; i++)
                 {
-                    var currentKey = currentValidTasks.ElementAt(i).Key;
-                    if (currentKey == checkbox.Tag)
+                    if (validTasks[i] == checkbox.Tag)
                     {
-
-                        currentValidTasks.Remove(currentKey);
-                        currentValidTasks.Add(currentKey, true);
-                        
+                        IsChecked[i] = true;
                     }
                 }
             }
-            currentValidTasksIsUsed = false;
 
         }
 
         private static void Select_Uncheck(object sender, RoutedEventArgs e)
         {
-            WaitForCurrentValidTasks();
-            currentValidTasksIsUsed = true;
             CheckBox checkbox = sender as CheckBox;
 
             if (checkbox.Tag.GetType() == typeof(Tasklet))
             {
-                for (int i = 0; i < currentValidTasks.Count; i++)
+                for (int i = 0; i < validTasks.Count; i++)
                 {
-                    var currentKey = currentValidTasks.ElementAt(i).Key;
-                    if (currentKey == checkbox.Tag)
+                    if (validTasks[i] == checkbox.Tag)
                     {
-
-                        currentValidTasks.Remove(currentKey);
-                        currentValidTasks.Add(currentKey, false);
+                        IsChecked[i] = false;
                     }
                 }
             }
-            currentValidTasksIsUsed = false;
-        }
-
-
-
-
-
-        private void CheckBox1_Checked(object sender, RoutedEventArgs e)
-        {
-            isUrgent = true;
-        }
-
-        private void CheckBox0_Checked(object sender, RoutedEventArgs e)
-        {
-            isRequired = true;
-        }
-
-        private void CheckBox2_Checked(object sender, RoutedEventArgs e)
-        {
-            isOptional = true;
-        }
-
-        private void CheckBox3_Checked(object sender, RoutedEventArgs e)
-        {
-            isOther = true;
-        }
-
-        private void CheckBox0_Unchecked(object sender, RoutedEventArgs e)
-        {
-            isUrgent = false;
-        }
-
-        private void CheckBox1_Unchecked(object sender, RoutedEventArgs e)
-        {
-            isRequired = false;
-        }
-
-        private void CheckBox2_Unchecked(object sender, RoutedEventArgs e)
-        {
-            isOptional = false;
-        }
-
-        private void CheckBox3_Unchecked(object sender, RoutedEventArgs e)
-        {
-            isOther = false;
         }
 
         private void Delete_All_Click(object sender, RoutedEventArgs e)
         {
-            WaitForCurrentValidTasks();
-            currentValidTasksIsUsed = true;
-            Tasklet[] toBeDeletedTasks = currentValidTasks.Keys.ToArray();
-            DeleteTasks(toBeDeletedTasks);
-            ContainsTextStackPanel.Children.Clear();
-            currentValidTasks.Clear();
-            currentValidTasksIsUsed = false;
+            for (int i = 0; i < validTasks.Count; i++)
+            {
+                
+                TaskerStore.CurrentTasks.Remove(validTasks[i]);
+                validTasks[i].Delete();
+            }
+            validTasks.Clear();
+            borders.Clear();
+            stackPanelNumber.Clear();
+            IsChecked.Clear();
+            containsTextStackPanel[0].Children.Clear();
+
+            TaskerStore.CurrentTasks = TaskerStore.CurrentTasks;
         }
 
         private void Delete_Selected_Click(object sender, RoutedEventArgs e)
         {
-            WaitForCurrentValidTasks();
-            currentValidTasksIsUsed = true;
-            for (int i = 0; i < currentValidTasks.Count - 1; i++)
+            for (int i = 0; i < IsChecked.Count; i++)
             {
-                var kvp = currentValidTasks.ElementAt(i);
-                if (kvp.Value == true)
-                {
-
-                    for (int j = 0; i < ContainsTextStackPanel.Children.Count; i++)
-                    {
-                        bool checkboxcheck = false;
-                        if (ContainsTextStackPanel.Children[j].GetType() == typeof(Border))
-                        {
-                            checkboxcheck = true;
-                            Border border = (Border)ContainsTextStackPanel.Children[j];
-                            Tasklet task = (Tasklet)border.Tag;
-
-                            if (task.Id != null && kvp.Key.Id != null && task.Id.ToString() == kvp.Key.Id.ToString())
-                            {
-                                kvp.Key.Delete();
-                                task.Delete();
-                            }
-                        }
-                        if (ContainsTextStackPanel.Children[j].GetType() == typeof(CheckBox) && checkboxcheck)
-                        {
-                            ContainsTextStackPanel.Children.Remove(ContainsTextStackPanel.Children[j]);
-                            
-                            checkboxcheck = false;  
-                        }
-                    }
-
-                }
                 
+                if (IsChecked[i])
+                {
+                    containsTextStackPanel[0].Children.RemoveAt(containsTextStackPanel[0].Children.IndexOf(borders[i]) + 1);
+                    containsTextStackPanel[0].Children.Remove(borders[i]);
+
+                    TaskerStore.CurrentTasks.Remove(validTasks[i]);
+
+                    validTasks[i].Delete();
+                    validTasks.RemoveAt(i);
+                    borders.RemoveAt(i);
+                    stackPanelNumber.RemoveAt(i);
+                    IsChecked.RemoveAt(i);
+                    i = 0;
+                }
+
+
+                if (validTasks.Count != 0)  
+                {
+                    validTasks[i].stackPanelNumber = stackPanelNumber[i];
+                }
             }
-            currentValidTasksIsUsed = false;
+
+            if (IsChecked[0])
+            {
+                containsTextStackPanel[0].Children.RemoveAt(containsTextStackPanel[0].Children.IndexOf(borders[0]) + 1);
+                containsTextStackPanel[0].Children.Remove(borders[0]);
+
+                TaskerStore.CurrentTasks.Remove(validTasks[0]);
+
+                validTasks[0].Delete();
+                validTasks.RemoveAt(0);
+                borders.RemoveAt(0);
+                stackPanelNumber.RemoveAt(0);
+                IsChecked.RemoveAt(0);
+            }
+
+            if (validTasks.Count != 0)
+            {
+                validTasks[0].stackPanelNumber = stackPanelNumber[0];
+            }
+
+            TaskerStore.CurrentTasks = TaskerStore.CurrentTasks;
+
+            for (int i = 0; i < validTasks.Count; i++)
+            {
+                validTasks[i].stackPanelNumber = 0;
+            }
+
+            CheckStackPanel();
         }
-
-
-        public bool IsClosed { get; private set; }
 
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
 
-            currentValidTasks.Clear();
-            ContainsTextStackPanel.Children.Clear();
+            for(int i = 0;i < validTasks.Count;i++)
+            {
+                validTasks[i].stackPanels = TaskerStore.CurrentStackpanels;
+                validTasks[i].stackPanelNumber = stackPanelNumber[i];
+
+            }
+            validTasks.Clear();
+            borders.Clear();
+            stackPanelNumber.Clear();
+            IsChecked.Clear();
+            containsTextStackPanel[0].Children.Clear();
 
 
-            IsClosed = true;
         }
+
+
+
     }
 }

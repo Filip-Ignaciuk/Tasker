@@ -37,16 +37,8 @@
             <Label Grid.Row="4" Content="Importance" Margin="10,0,10,0" FontSize="14">
 
             </Label>
-            <Grid Grid.Row="5" Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            <Grid Grid.Row="5" Margin="10" x:Name="RadialButGrid">
+                
 
                 
                 <RadioButton Grid.Row="0" Grid.Column="0" x:Name="radiobut1"  VerticalAlignment="Center">

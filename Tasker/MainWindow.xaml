@@ -16,8 +16,9 @@
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" x:Name="GridRow1">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -25,23 +26,27 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="Add" Margin="8" Click="Add">
+            <Button Grid.Column="0" Content="Add" Margin="8" Click="Add" x:Name="AddButton">
                 
             </Button>
 
-            <Button Grid.Column="1" Content="Remove" Margin="8" Click="Remove">
+            <Button Grid.Column="1" Content="Remove" Margin="8" Click="Remove" x:Name="RemoveButton">
 
             </Button>
 
-            <Button Grid.Column="2" Content="Save" Margin="8" Click="Save">
+            <Button Grid.Column="2" Content="Save Tasklets" Margin="8" Click="SaveTasklets" x:Name="SaveTButton">
 
             </Button>
 
-            <Button Grid.Column="3" Content="Load" Margin="8" Click="Load">
+            <Button Grid.Column="3" Content="Save Profile" Margin="8" Click="SaveProfile" x:Name="SavePButton" >
 
             </Button>
 
-            <Button Grid.Column="4" Content="Settings" Margin="8" Click="Settings">
+            <Button Grid.Column="4" Content="Load" Margin="8" Click="Load" x:Name="LoadButton">
+
+            </Button>
+
+            <Button Grid.Column="5" Content="Settings" Margin="8" Click="Settings" x:Name="SettingsButton">
 
             </Button>
 
@@ -51,7 +56,7 @@
         
         
 
-        <Grid Grid.Row="1" x:Name="StackPanelsContainer">
+        <Grid Grid.Row="1" x:Name="StackPanelsContainer" >
             
 
 

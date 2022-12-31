@@ -92,7 +92,9 @@ namespace Tasker
             {
                 Stream stream = File.Open(fileName, FileMode.Open);
                 BinaryFormatter formatter = new BinaryFormatter();
-                list.Add((Tasklet)formatter.Deserialize(stream));
+                Tasklet tasklet = (Tasklet)formatter.Deserialize(stream);
+                tasklet.stackPanels = TaskerStore.CurrentStackpanels;
+                list.Add(tasklet);
                 stream.Close();
 
             }
@@ -103,6 +105,9 @@ namespace Tasker
         public static void SaveProfile(Profile _profile)
         {
             Stream stream = File.Open(TaskerStore.DocumentDir + @"\Tasker\Profiles\Profile_" + _profile.nameOfProfile + ".dat", FileMode.Create);
+            StreamWriter lp = new StreamWriter(TaskerStore.DocumentDir + @"\Tasker\lp.txt");
+            lp.WriteLine(TaskerStore.DocumentDir + @"\Tasker\Profiles\Profile_" + _profile.nameOfProfile + ".dat");
+            lp.Close();
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, _profile);
             stream.Close();

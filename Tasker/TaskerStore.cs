@@ -19,11 +19,35 @@ namespace Tasker
     // Allows other pages to share data
     public class TaskerStore
     {
+        private static List<UIElement> _activeElements = new List<UIElement>();
+
+        public static List<UIElement> ActiveElements { get { return _activeElements; } set { _activeElements = value; } }
+
+
         public readonly static string DocumentDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         private static List<Tasklet> _currentTasks = new List<Tasklet>();
 
-        public static List<Tasklet> CurrentTasks { get { return _currentTasks; } set { _currentTasks = value; } }
+        public static List<Tasklet> CurrentTasks
+        {
+            get
+            {
+                return _currentTasks;
+            }
+            set
+            {
+                _currentTasks = value;
+                for (int i = 0; i < Profile.stackpanelcount; i++)
+                {
+                    CurrentStackpanels[i].Children.Clear();
+                }
+                foreach (var tasklet in _currentTasks)
+                {
+                    tasklet.stackPanels = CurrentStackpanels;
+                    Tasklet.DisplayTask(tasklet);
+                }
+            }
+        }
 
         // Allows pages like Add, to add to the main pages stackpanel.
         private static StackPanel[]? _currentStackpanels;
@@ -41,6 +65,8 @@ namespace Tasker
 
         }
 
+        public static List<string>  LabelName = new List<string>();
+
         private static Profile _profile;
 
         public static Profile Profile
@@ -56,6 +82,8 @@ namespace Tasker
                 _profile = value;
                 CurrentStackpanels = _profile.stackPanels.ToArray();
                 StackPanelsContainerGrid.Children.Clear();
+                StackPanelsContainerGrid.ColumnDefinitions.Clear();
+                StackPanelsContainerGrid.RowDefinitions.Clear();
                 for (int i = 0; i < value.stackpanelcount; i++)
                 {
                     // Defining columns.
@@ -74,9 +102,13 @@ namespace Tasker
                 rowDefinition.Height = new GridLength(2, GridUnitType.Star);
                 StackPanelsContainerGrid.RowDefinitions.Add(rowDefinition);
 
+                LabelName.Clear();
+
                 foreach (var label in _profile.labels)
                 {
                     StackPanelsContainerGrid.Children.Add(label);
+                    LabelName.Add(label.Name);
+
                 }
 
                 foreach (var scrollViewer in _profile.scrollViewers)

@@ -27,6 +27,7 @@ namespace Tasker
         public int stackpanelcount = 0;
         public Profile(List<string> _namesOfContainters, string _nameOfProfile)
         {
+            stackpanelcount = _namesOfContainters.Count;
             nameOfProfile = _nameOfProfile;
             foreach (var name in _namesOfContainters)
             {
@@ -54,7 +55,6 @@ namespace Tasker
                 scrollViewers.Add(scrollViewer);
 
 
-                stackpanelcount++;
             }
         }
 
