@@ -124,12 +124,33 @@ namespace Tasker
 
         public static Profile LoadProfile(string _path)
         {
+            Profile profile;
             _path = _path.Replace("\r", "");
             _path = _path.Replace("\n", "");
-            Stream stream = File.Open(_path, FileMode.Open);
-            BinaryFormatter formatter = new BinaryFormatter();
-            Profile profile = (Profile)formatter.Deserialize(stream);
-            stream.Close();
+            try
+            {
+                Stream stream = File.Open(_path, FileMode.Open);
+                BinaryFormatter formatter = new BinaryFormatter();
+                profile = (Profile)formatter.Deserialize(stream);
+
+                stream.Close();
+            }
+            catch (Exception ex)
+            {
+                Stream stream = File.Open(TaskerStore.DocumentDir + @"\Tasker\Profiles\Profile_default.dat", FileMode.Open);
+                BinaryFormatter formatter = new BinaryFormatter();
+                profile = (Profile)formatter.Deserialize(stream);
+
+                stream.Close();
+            }
+            finally
+            {
+                
+            }
+
+
+
+            
             return profile;
         }
     }

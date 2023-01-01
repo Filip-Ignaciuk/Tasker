@@ -97,22 +97,31 @@ namespace Tasker
 
             while (radioButNum != 0)
             {
+                
+
+
                 string name = "radiobut" + radioButNum.ToString();
                 radioButNum--;
 
                 Label label = new Label();
                 label.Content = TaskerStore.LabelName[contentNum];
                 contentNum++;
+
                 RadioButton radioButton = new RadioButton();
+                radioButton.Checked += rb_Checked;
+                radioButton.Unchecked += rb_UnChecked;
                 radioButton.Name = name;
                 radioButton.Content = label;
+     
+
                 Grid.SetColumn(radioButton, ColumNum);
-                
+                currentRadioButtons.Add(radioButton);
 
                 if (num == 2)
                 {
                     num = 1;
-                    Grid.SetColumn(radioButton, row);
+
+                    Grid.SetRow(radioButton, row);
                     row++;
                 }
                 else
@@ -120,7 +129,42 @@ namespace Tasker
                     Grid.SetRow(radioButton, row);
                     num++;
                 }
+                RadialButGrid.Children.Add(radioButton);
             }
+
+            
+
+
+
+        }
+
+        private void rb_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButton radioButton = sender as RadioButton;
+
+            currentRadioButtons[currentRadioButtons.IndexOf(radioButton)].IsChecked = true;
+
+
+        }
+
+        private void rb_UnChecked(object sender, RoutedEventArgs e)
+        {
+            RadioButton radioButton = sender as RadioButton;
+
+            currentRadioButtons[currentRadioButtons.IndexOf(radioButton)].IsChecked = false;
+
+
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            currentRadioButtons.Clear();
+
+            base.OnClosed(e);
+
+            
+
+
         }
     }
 }

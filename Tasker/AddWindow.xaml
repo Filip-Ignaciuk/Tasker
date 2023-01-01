@@ -34,30 +34,14 @@
 
             </TextBox>
 
-            <Label Grid.Row="4" Content="Importance" Margin="10,0,10,0" FontSize="14">
+            <Label Grid.Row="4" Content="Which Section" Margin="10,0,10,0" FontSize="14">
 
             </Label>
             <Grid Grid.Row="5" Margin="10" x:Name="RadialButGrid">
-                
+
+
 
                 
-                <RadioButton Grid.Row="0" Grid.Column="0" x:Name="radiobut1"  VerticalAlignment="Center">
-                    <Label FontSize="10" Content="Urgent">
-                    </Label>
-                </RadioButton>
-                
-                <RadioButton Grid.Row="0" Grid.Column="1" x:Name="radiobut2">
-                    <Label FontSize="10" Content="Required">
-                    </Label>
-                </RadioButton>
-                <RadioButton Grid.Row="1" Grid.Column="0" x:Name="radiobut3">
-                    <Label FontSize="10" Content="Optional">
-                    </Label>
-                </RadioButton>
-                <RadioButton Grid.Row="1" Grid.Column="1" x:Name="radiobut4">
-                    <Label FontSize="10" Content="Other">
-                    </Label>
-                </RadioButton>
 
                 
                 

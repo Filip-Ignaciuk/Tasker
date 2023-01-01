@@ -28,12 +28,14 @@ namespace Tasker
         {
             AddWindow addWindow = new AddWindow();
             addWindow.Show();
+            this.Close();
         }
 
         private void Profile(object sender, RoutedEventArgs e)
         {
             AddProfileWindow addProfileWindow = new AddProfileWindow();
             addProfileWindow.Show();
+            this.Close();
         }
     }
 }

@@ -107,7 +107,7 @@ namespace Tasker
                 foreach (var label in _profile.labels)
                 {
                     StackPanelsContainerGrid.Children.Add(label);
-                    LabelName.Add(label.Name);
+                    LabelName.Add(label.Content.ToString());
 
                 }
 
